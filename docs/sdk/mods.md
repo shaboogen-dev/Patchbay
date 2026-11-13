@@ -163,7 +163,7 @@ What BML does with them:
 
 In the Patchbay window, ticking a mod also ticks its prerequisites (and theirs). Unticking a prerequisite leaves the mods that need it ticked, marks them in red with `Needs <name>` in their row, and adds an error for each to the Errors page. Load is greyed, with a red strip saying why, while any ticked mod has an error, and each error clears as soon as it is fixed. The window lists the mods present in `mods\` when it starts and on Refresh; a tick saved for a mod that isn't there any more is dropped.
 
-**Disable Mod** (the mod's right-click menu, or the bar under the list) sets a mod aside without uninstalling it: it leaves the list, is never prepared or loaded, and its issues don't show on the Errors page or block Load. **Show Disabled** lists disabled mods again, dimmed, with **Enable Mod**; a mod enabled again starts unticked. A disabled prerequisite is enabled again when a mod that needs it is ticked, and a mod a ticked mod needs can't be disabled.
+**Disable Mod** (the mod's right-click menu, or the bar under the list) sets a mod aside without uninstalling it: it leaves the list, is never prepared or loaded, and its issues don't show on the Errors page or block Load. Choosing **Disabled** in the list's **Show** dropdown lists the disabled mods, dimmed, with **Enable Mod**; a mod enabled again starts unticked. A disabled prerequisite is enabled again when a mod that needs it is ticked, and a mod a ticked mod needs can't be disabled.
 
 ## Running on several Bitwig versions
 

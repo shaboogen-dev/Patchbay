@@ -4,7 +4,7 @@ Lets a mod add its own blocks to Bitwig's Inspector, and rows of its own to Bitw
 
 - Mod ID: `inspector-composition-framework`
 - Built against Bitwig 6.1.4.
-- Needs BML loader 0.34.0-dev.6 or later (manifest `registrations`, `bml.api.Bml`).
+- Needs Patchbay 0.34.0-dev.6 or later (manifest `registrations`, `bml.api.Bml`).
 
 ## Contributing blocks
 

@@ -1,26 +1,26 @@
 # Framework: Themes
 
-Lets a theme change how Bitwig Studio looks: its colours, in the `.bte` format of Berikai's [Bitwig Theme Editor](https://github.com/Berikai/bitwig-theme-editor), and optionally its icons and images. A theme is a BML component of this framework, so a theme author writes no code. Bitwig's files are never changed: disable the framework and restart, and Bitwig looks as before.
+Lets a theme change how Bitwig Studio looks: its colours, in the `.bte` format of Berikai's [Bitwig Theme Editor](https://github.com/Berikai/bitwig-theme-editor), and optionally its icons and images. A theme is a Patchbay component of this framework, so a theme author writes no code. Bitwig's files are never changed: disable the framework and restart, and Bitwig looks as before.
 
 - Mod ID: `bte-theme-loader`
 - Built against Bitwig 6.1.4.
-- Needs BML loader 0.35.0-dev.12 or later. An earlier loader refuses this framework's manifest and lists it on Errors.
-- Ships no theme. Choose one in BML's component selection: one theme is selected at a time.
+- Needs Patchbay 0.35.0-dev.12 or later. An earlier loader refuses this framework's manifest and lists it on Errors.
+- Ships no theme. Choose one in Patchbay's component selection: one theme is selected at a time.
 
 ## Adding a theme
 
-Drop it in the `components/` folder of your BML folder. Either of these works, with nothing else to write:
+Drop it in the `components/` folder of your Patchbay folder. Either of these works, with nothing else to write:
 
 - **A `.bte` file**, directly in `components/`: `components/Dark Neon.bte`. This is what Bitwig Theme Editor saves.
 - **A folder** holding one `.bte` file, and optionally `overlays/` for icons and images: `components/Dark Neon/my-theme.bte`, `components/Dark Neon/overlays/icons/…`.
 
-The theme appears under this framework's **Themes** tab in BML, named after the file or folder. Tick the framework, choose the theme there and click **Load**.
+The theme appears under this framework's **Themes** tab in Patchbay, named after the file or folder. Tick the framework, choose the theme there and click **Load**.
 
-- A folder with two `.bte` files is an error on BML's **Errors** page that names them: keep one, or give each its own folder.
-- A folder BML doesn't recognise is a warning on **Errors** and stops nothing, so you can keep other folders here.
+- A folder with two `.bte` files is an error on Patchbay's **Errors** page that names them: keep one, or give each its own folder.
+- A folder Patchbay doesn't recognise is a warning on **Errors** and stops nothing, so you can keep other folders here.
 - A problem with a theme stops **Load** only while that theme is selected.
 - Your selection follows the theme's name. Rename its file or folder and it counts as a new theme: choose it again.
-- `components/` belongs to one BML folder: when you unpack a new version of BML, copy your themes across.
+- `components/` belongs to one Patchbay folder: when you unpack a new version of Patchbay, copy your themes across.
 
 The theme and its overlays are read once, when Bitwig starts: restart Bitwig after changing them.
 
@@ -41,7 +41,7 @@ Files under the overlay folder's `icons/` and `images/` folders replace Bitwig's
 
 ## Giving a theme a name, author and description
 
-A folder can hold a `mod.json`, which then decides everything about the theme: its name, its ID, where its files are, and the author, description and README that BML shows. A theme doesn't need one.
+A folder can hold a `mod.json`, which then decides everything about the theme: its name, its ID, where its files are, and the author, description and README that Patchbay shows. A theme doesn't need one.
 
 ```json
 {

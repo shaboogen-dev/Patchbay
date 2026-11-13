@@ -614,10 +614,10 @@ public final class BmlControlApp {
             Files.writeString(root.resolve("config").resolve(BmlPaths.TEST_INSTALL_MARKER),"");
             BmlPaths p=new BmlPaths(root);
             BmlConfig c=new BmlConfig(p);c.load();
-            require(c.disabledMods().isEmpty()&&!c.showDisabledMods(),"nothing disabled by default");
-            c.setDisabledMods(List.of("theme","not-installed"));c.setShowDisabledMods(true);c.save();
+            require(c.disabledMods().isEmpty()&&c.modsShow().equals("All"),"nothing disabled by default");
+            c.setDisabledMods(List.of("theme","not-installed"));c.setModsShow("Disabled");c.save();
             BmlConfig again=new BmlConfig(p);again.load();
-            require(again.disabledMods().equals(new TreeSet<>(List.of("not-installed","theme")))&&again.showDisabledMods(),"disabled list kept in the install's bml.properties");
+            require(again.disabledMods().equals(new TreeSet<>(List.of("not-installed","theme")))&&again.modsShow().equals("Disabled"),"disabled list kept in the install's bml.properties");
             require(Files.readString(p.configFile).contains("mods.disabled=not-installed,theme"),"stored as mods.disabled");
             PackageInventory.Entry a=entry(root,"a"),b=entry(root,"b"),cc=entry(root,"c"),d=entry(root,"d");
             a.requires=Map.of("b","");b.requires=Map.of("c","");

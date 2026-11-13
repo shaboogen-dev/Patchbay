@@ -274,11 +274,20 @@ final class Panels {
         };
         NativeBlock match = null;
         for (NativeBlock n : build.nativeBlocks) {
-            if (!n.title.trim().equalsIgnoreCase(title)) continue;
+            if (!names(n.title, title)) continue;
             if (match != null) return null;
             match = n;
         }
         return match;
+    }
+
+    /**
+     * Whether a title of Bitwig's names this block. Bitwig titles the Note Inspector's main block with the selection's
+     * live text, "NOTE" for one note and "NOTES (8)" for eight, so a count in brackets and a plural are allowed.
+     */
+    private static boolean names(String shown, String block) {
+        String t = shown.toLowerCase(java.util.Locale.ROOT).trim().replaceFirst("\\s*\\(\\d+\\)$", "");
+        return t.equals(block) || t.equals(block + "s");
     }
 
     /** Where {@code target} sits in the panel's widget tree (five levels deep at most); null if not exactly once. */

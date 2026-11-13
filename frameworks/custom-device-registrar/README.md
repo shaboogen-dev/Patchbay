@@ -5,15 +5,15 @@ Lets Bitwig Studio load native (Nitro) devices, modulators and Grid modules that
 - Mod ID: `custom-device-registrar`
 - Author: shaboogen
 - Built against Bitwig 6.1.4.
-- Needs Patchbay loader 0.36.0-dev.11 or later: an earlier loader can't read the way this framework declares its config file.
+- Needs Patchbay 0.36.0-dev.11 or later: an earlier loader can't read the way this framework declares its config file.
 
 ## Choosing your folders
 
-In BML, open **Device Folders** under Tools, add the folders that hold your devices, and press Load. Remove a folder and press Load, and its devices are gone from Bitwig. Devices you move, add or delete inside a listed folder need nothing more than a restart of Bitwig.
+In Patchbay, open **Device Folders** under Tools, add the folders that hold your devices, and press Load. Remove a folder and press Load, and its devices are gone from Bitwig. Devices you move, add or delete inside a listed folder need nothing more than a restart of Bitwig.
 
-A listed folder that is gone, isn't responding or can't be read is an error on BML's Errors page while the framework is ticked, and Load refuses until you fix it: reconnect or restore the folder, or remove it from Device Folders. Folders under `directories`, below, aren't checked.
+A listed folder that is gone, isn't responding or can't be read is an error on Patchbay's Errors page while the framework is ticked, and Load refuses until you fix it: reconnect or restore the folder, or remove it from Device Folders. Folders under `directories`, below, aren't checked.
 
-The list is kept in the framework's config file, `mods/custom-device-registrar/config.json` in BML's settings folder (**Settings > Settings Folder** in BML's window shows where). An update of the framework leaves the file alone. You can also edit it by hand:
+The list is kept in the framework's config file, `mods/custom-device-registrar/config.json` in Patchbay's settings folder (**Settings > Settings Folder** in Patchbay's window shows where). An update of the framework leaves the file alone. You can also edit it by hand:
 
 ```json
 {
@@ -47,7 +47,7 @@ A config that can't be read registers nothing; the reason is in the session's mo
 
 ## Entries written by hand (deprecated)
 
-These keys still work, but are deprecated: list your folders in Device Folders instead. The config also accepts folders per kind and explicit entries, for a package with its own search keywords or one kept outside a scanned folder. BML's tool leaves these keys as they are, and doesn't list them.
+These keys still work, but are deprecated: list your folders in Device Folders instead. The config also accepts folders per kind and explicit entries, for a package with its own search keywords or one kept outside a scanned folder. Patchbay's tool leaves these keys as they are, and doesn't list them.
 
 ```json
 {

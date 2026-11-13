@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Disable Mod in the Patchbay window, without starting Bitwig: builds the window over a test
  * install (one with config/portable, so nothing outside it is touched), reads its mods and drives
- * Disable Mod, Show Disabled, Enable Mod and the prerequisite rules through the window's own code.
+ * Disable Mod, Show > Disabled, Enable Mod and the prerequisite rules through the window's own code.
  *   javac -cp bml-control.jar -d tests-classes loader/tests/PatchbayDisabledSmoke.java
  *   java -cp "bml-control.jar;tests-classes" dev.bitwigre.bml.PatchbayDisabledSmoke <test install> [png folder]
  * Adds a mod "zz-disable-smoke" that needs a mod that isn't installed (so it has a blocking error)
@@ -39,9 +39,9 @@ public class PatchbayDisabledSmoke {
 
     static void run(Path root,Path out) throws Exception {
         BmlPaths paths=new BmlPaths(root);
-        // Start from nothing disabled and the filter off.
+        // Start from nothing disabled and Show on All.
         on(()->{
-            BmlConfig c=new BmlConfig(paths);c.load();c.setDisabledMods(List.of("zz-kept-not-installed"));c.setShowDisabledMods(false);c.save();
+            BmlConfig c=new BmlConfig(paths);c.load();c.setDisabledMods(List.of("zz-kept-not-installed"));c.setModsShow("All");c.save();
             PatchbayStyle.install();
             w=new PatchbayWindow(new BmlService(paths));
             call("readEverything",new Class<?>[]{boolean.class},true);
@@ -70,13 +70,18 @@ public class PatchbayDisabledSmoke {
         require(props.contains("mods.disabled=zz-disable-smoke,zz-kept-not-installed"),"kept in bml.properties, an absent ID kept");
         require(Files.readString(paths.enabledModsFile).contains("mod.zz-disable-smoke=false"),"its tick is cleared");
         if(out!=null)shot(out.resolve("disabled-hidden.png"));
-        // Show Disabled: listed again, dimmed, still no errors.
-        on(()->((AbstractButton)field("showDisabled")).doClick());
+        // Show > Disabled: only the disabled mods, dimmed, still no errors; no "Disabled" note in the row.
+        on(()->showChoice().setSelectedItem("Disabled"));
         on(()->{
-            require(rows().contains(smoke)&&rows().size()==before,"Show Disabled lists it");
+            require(rows().equals(List.of(smoke)),"Show > Disabled lists only the disabled mod: "+rows());
             require(issuesFor(smoke)==0&&blockers()==0,"its errors stay hidden");
+            require(!descriptionCell(0).contains("Disabled"),"the row has no Disabled note: "+descriptionCell(0));
         });
-        require(Files.readString(paths.configFile).contains("ui.mods.show_disabled=true"),"the filter is remembered");
+        require(Files.readString(paths.configFile).contains("ui.mods.show=Disabled"),"the choice is remembered");
+        for(String other:List.of("All","Ticked","Unticked")){
+            on(()->{showChoice().setSelectedItem(other);require(!rows().contains(smoke),"Show > "+other+" leaves it out");});
+        }
+        on(()->showChoice().setSelectedItem("Disabled"));
         on(()->select(smoke));
         if(out!=null)shot(out.resolve("disabled-shown-selected.png"));
         // A new window reads the same state.
@@ -87,13 +92,16 @@ public class PatchbayDisabledSmoke {
             ((Window)fieldOf(first,"frame")).dispose();
         });
         settle();
-        on(()->require(((AbstractButton)field("showDisabled")).isSelected()&&rows().contains(smoke)&&issuesFor(smoke)==0,"state survives a restart"));
+        on(()->require("Disabled".equals(showChoice().getSelectedItem())&&rows().equals(List.of(smoke))&&issuesFor(smoke)==0,"state survives a restart"));
         // Enable it again: unticked, its error back (as information only while unticked).
         on(()->call("enableMod",new Class<?>[]{PackageInventory.Entry.class},entry(smoke)));
         on(()->{
             require(!(boolean)call("ticked",new Class<?>[]{PackageInventory.Entry.class},entry(smoke)),"enabled again, it is unticked");
             require(issuesFor(smoke)>0,"its error shows again");
             require(!text("modsMeta").contains("disabled"),"no disabled count");
+            require(rows().isEmpty(),"enabled, it leaves the Disabled list");
+            showChoice().setSelectedItem("All");
+            require(rows().contains(smoke),"and is under All again");
         });
         require(Files.readString(paths.configFile).contains("mods.disabled=zz-kept-not-installed"),"only the absent ID stays");
 
@@ -176,6 +184,13 @@ public class PatchbayDisabledSmoke {
     }
     @SuppressWarnings("unchecked") static int blockers() throws Exception {return ((List<PackageInventory.Issue>)field("blockers")).size();}
     @SuppressWarnings("unchecked") static String blockerText() throws Exception {return ((List<PackageInventory.Issue>)field("blockers")).toString();}
+    @SuppressWarnings("unchecked") static JComboBox<String> showChoice() throws Exception {return (JComboBox<String>)field("show");}
+    static String descriptionCell(int row) throws Exception {
+        JTable t=(JTable)field("modsTable");
+        Component c=t.getCellRenderer(row,2).getTableCellRendererComponent(t,t.getValueAt(row,2),false,false,row,2);
+        Field a=c.getClass().getDeclaredField("a"),b=c.getClass().getDeclaredField("b");a.setAccessible(true);b.setAccessible(true);
+        return a.get(c)+"|"+b.get(c);
+    }
     static String text(String label) throws Exception {return ((JLabel)field(label)).getText();}
     static void tick(PackageInventory.Entry e,boolean on) throws Exception {
         call("changeTick",new Class<?>[]{PackageInventory.Entry.class,boolean.class},e,on);

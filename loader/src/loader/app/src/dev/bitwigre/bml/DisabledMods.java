@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 
 /**
  * Mods the user has set aside in Patchbay without uninstalling them. A disabled mod isn't listed
- * (unless the list's "Show Disabled" is on), is never prepared or loaded, and none of its issues
+ * (except when the list's Show is "Disabled"), is never prepared or loaded, and none of its issues
  * show or block Load. The IDs are kept in {@code bml.properties} as {@code mods.disabled}; an ID
  * that isn't installed is kept and ignored.
  */

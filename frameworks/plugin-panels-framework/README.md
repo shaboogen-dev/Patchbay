@@ -4,7 +4,7 @@ Replaces the generic parameter page of a VST2, VST3 or CLAP plug-in in the devic
 
 - Mod ID: `plugin-panels-framework`
 - Built against Bitwig 6.1.4.
-- Needs Framework: Actions and Menus 0.6.0 (for Generate Parameter Sheet, Generate Theme Sheet and Save Panel from Clipboard, rows in a plug-in device's right-click menu) and Patchbay loader 0.36.0-dev.11 or later.
+- Needs Framework: Actions and Menus 0.6.0 (for Generate Parameter Sheet, Generate Theme Sheet and Save Panel from Clipboard, rows in a plug-in device's right-click menu) and Patchbay 0.36.0-dev.11 or later.
 - Development version: the layout format may still change.
 
 ## What it changes

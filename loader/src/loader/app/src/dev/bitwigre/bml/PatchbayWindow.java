@@ -23,7 +23,7 @@ import static dev.bitwigre.bml.PatchbayStyle.*;
  * a count; the footer with Load, Stop / Quit and the status line. Selecting a row (click or Enter)
  * shows a selection bar with that item's options above the error strip; Esc clears it. A mod's
  * right-click menu has its own actions, Disable Mod among them: a disabled mod is set aside (not
- * listed unless Show Disabled is on, never loaded, its errors hidden) until Enable Mod. Only tick
+ * listed unless Show is Disabled, never loaded, its errors hidden) until Enable Mod. Only tick
  * boxes tick. Long text (a README, a session's log) opens in the full-window reader. While an error
  * blocks Load, Load is greyed and a red strip says why. No motion, no tooltips.
  */
@@ -67,8 +67,8 @@ final class PatchbayWindow {
 
     // ---- Mods ----
     private final JTextField search=field("Search mods…");
-    private final JComboBox<String> show=combo(new String[]{"All","Ticked","Unticked"});
-    private final FlatButton selectAll=new FlatButton("Select All"),refresh=new FlatButton("Refresh");
+    private final JComboBox<String> show=combo(new String[]{"All","Ticked","Unticked","Disabled"});
+    private final FlatButton selectAll=new FlatButton("Select All"),refresh=new FlatButton("Refresh"),addMod=new FlatButton("Add Mod…");
     private final JLabel modsMeta=new JLabel();
     private final ModsModel modsModel=new ModsModel();
     private final ListTable modsTable=new ListTable(modsModel);
@@ -77,7 +77,6 @@ final class PatchbayWindow {
     private final Set<String> disabled=new TreeSet<>();
     /** Mods that can't be disabled now: ID -> the ticked mods that need it. */
     private Map<String,List<String>> neededBy=Map.of();
-    private final Tick showDisabled=new Tick("Show Disabled");
 
     // ---- Maps ----
     private final JLabel mapsMeta=new JLabel();
@@ -197,6 +196,9 @@ final class PatchbayWindow {
         frame.getRootPane().getActionMap().put("find",new AbstractAction(){@Override public void actionPerformed(ActionEvent e){
             closeReader();activate(Page.MODS);search.requestFocusInWindow();search.selectAll();
         }});
+        frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_O,menu),"add-mod");
+        frame.getRootPane().getActionMap().put("add-mod",new AbstractAction(){@Override public void actionPerformed(ActionEvent e){chooseMods();}});
+        installModDrop();
         frame.addWindowFocusListener(new WindowAdapter(){
             @Override public void windowGainedFocus(WindowEvent e){if(loaded&&!busy)readEverything(false);}
         });
@@ -608,17 +610,21 @@ final class PatchbayWindow {
         search.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN,0),"to-list");
         search.getActionMap().put("to-list",new AbstractAction(){@Override public void actionPerformed(ActionEvent e){modsTable.requestFocusInWindow();}});
         search.setMaximumSize(new Dimension(250,CONTROL_HEIGHT));
-        show.addActionListener(e->fillMods());
-        showDisabled.setSelected(service.config().showDisabledMods());
-        showDisabled.addActionListener(e->{
-            service.config().setShowDisabledMods(showDisabled.isSelected());
+        // Wide enough for its longest choice with the arrow ("Disabled" was cut short).
+        Dimension showSize=new Dimension(show.getPreferredSize().width+18,CONTROL_HEIGHT);
+        show.setPreferredSize(showSize);show.setMaximumSize(showSize);
+        show.setSelectedItem(service.config().modsShow());
+        if(show.getSelectedIndex()<0)show.setSelectedIndex(0);
+        show.addActionListener(e->{
+            service.config().setModsShow(String.valueOf(show.getSelectedItem()));
             try{service.config().save();}catch(IOException ex){setStatus("The view couldn't be saved: "+ex.getMessage());}
             fillMods();
         });
         selectAll.addActionListener(e->toggleAll());
         refresh.addActionListener(e->{readEverything(false);setStatus("Mods, maps and components read again.");});
+        addMod.addActionListener(e->chooseMods());
         installModMenu();
-        JComponent controls=row(search,label("Show",ui(13),MUTED),show,showDisabled,null,selectAll,refresh);
+        JComponent controls=row(search,label("Show",ui(13),MUTED),show,null,selectAll,refresh,addMod);
         return page("Mods",modsMeta,controls,scroll(modsTable,WELL));
     }
     /** A disabled mod is never ticked, whatever its saved tick says. */
@@ -654,7 +660,7 @@ final class PatchbayWindow {
             default->{}
         }
     }
-    /** A disabled mod, listed while Show Disabled is on: dimmed, its tick box greyed, never red. */
+    /** A disabled mod, listed when Show is Disabled: dimmed, its tick box greyed, never red. */
     private void styleDisabledMod(Cell c,PackageInventory.Entry e,int col){
         switch(col){
             case 0->{c.tick=true;c.ticked=false;c.tickEnabled=false;}
@@ -663,7 +669,7 @@ final class PatchbayWindow {
                 boolean shown=!"Other".equals(area)||!e.declaredArea.isBlank();
                 c.a=shown?area+": ":"";c.ca=DIM;c.b=shown?e.shortName():e.name;c.cb=DIM;
             }
-            case 2->{c.a="Disabled"+(e.description.isBlank()?"":"  ·  ");c.ca=DIM;c.fa=ui(13);c.b=e.description;c.cb=DIM;c.fb=ui(13);}
+            case 2->{c.a=e.description;c.ca=DIM;c.fa=ui(13);}
             case 3->{c.a=e.version;c.ca=DIM;c.fa=ui(13);}
             case 4->{c.a=e.author;c.ca=DIM;c.fa=ui(13);}
             default->{}
@@ -695,9 +701,10 @@ final class PatchbayWindow {
     private void fillMods(){
         String q=search.getText().strip().toLowerCase(Locale.ROOT),which=String.valueOf(show.getSelectedItem());
         List<PackageInventory.Entry> rows=new ArrayList<>();
-        boolean withDisabled=showDisabled.isSelected();
+        // Disabled lists only the disabled mods; the other choices leave them out.
+        boolean disabledView="Disabled".equals(which);
         for(PackageInventory.Entry e:snapshot.entries()){
-            if(isDisabled(e)&&!withDisabled)continue;
+            if(isDisabled(e)!=disabledView)continue;
             if("Ticked".equals(which)&&!ticked(e))continue;
             if("Unticked".equals(which)&&ticked(e))continue;
             String hay=(e.name+" "+e.area()+" "+e.id+" "+e.version+" "+e.author+" "+e.description+" "+String.join(" ",e.tags)).toLowerCase(Locale.ROOT);
@@ -778,7 +785,7 @@ final class PatchbayWindow {
         if(why!=null){setStatus(e.name+" can't be disabled: "+why+".");return;}
         disabled.add(e.id);requested.put(e.id,false);
         saveTicks();saveDisabled();recompute();
-        setStatus("Disabled "+e.name+": it isn't loaded and its errors are hidden. Tick Show Disabled to find it again.");
+        setStatus("Disabled "+e.name+": it isn't loaded and its errors are hidden. Choose Disabled in Show to find it again.");
     }
     private void enableMod(PackageInventory.Entry e){
         if(busy||!isDisabled(e))return;
@@ -828,13 +835,114 @@ final class PatchbayWindow {
         try{service.saveEnabled(requested);}catch(IOException ex){setStatus("Ticks couldn't be saved: "+ex.getMessage());}
     }
 
+    // ---- Add Mod ------------------------------------------------------------------------------
+    /** Add Mod… (the button, Ctrl/Cmd+O): mod ZIPs chosen in the system's file dialog, several at once. */
+    private void chooseMods(){
+        if(busy||!loaded)return;
+        List<Path> zips=NativeFilePicker.openMany(frame,"add-mod","Add mods (ZIP files)","zip");
+        if(!zips.isEmpty())addMods(zips);
+    }
+    /** ZIPs dropped anywhere on the window are added as with Add Mod…; the Mods list keeps Copy. */
+    private void installModDrop(){
+        TransferHandler copy=modsTable.getTransferHandler();
+        final class Drop extends TransferHandler {
+            @Override public boolean canImport(TransferSupport s){
+                return !busy&&loaded&&s.isDataFlavorSupported(java.awt.datatransfer.DataFlavor.javaFileListFlavor);
+            }
+            @Override public boolean importData(TransferSupport s){
+                if(!canImport(s))return false;
+                try{
+                    @SuppressWarnings("unchecked")
+                    List<java.io.File> files=(List<java.io.File>)s.getTransferable().getTransferData(java.awt.datatransfer.DataFlavor.javaFileListFlavor);
+                    List<Path> paths=files.stream().map(java.io.File::toPath).toList();
+                    if(paths.isEmpty())return false;
+                    SwingUtilities.invokeLater(()->addMods(paths));
+                    return true;
+                }catch(Exception ex){setStatus("The dropped files couldn't be read: "+ex.getMessage());return false;}
+            }
+            @Override public int getSourceActions(JComponent c){return copy==null?NONE:copy.getSourceActions(c);}
+            @Override public void exportToClipboard(JComponent c,java.awt.datatransfer.Clipboard clip,int action){if(copy!=null)copy.exportToClipboard(c,clip,action);}
+        }
+        Drop drop=new Drop();
+        frame.setTransferHandler(drop);
+        modsTable.setTransferHandler(drop);
+        if(modsTable.getParent() instanceof JViewport v)v.setTransferHandler(drop);
+    }
+    private record AddChecks(List<ModInstaller.Checked> ok,List<String> refused){}
+    private record AddResult(List<String> added,List<String> replaced,List<String> failed){}
+    /** Checks every ZIP before anything is written, asks once before replacing installed mods,
+     *  installs, then reads everything again as on startup. Nothing is ticked. */
+    private void addMods(List<Path> zips){
+        if(busy||!loaded)return;
+        closeReader();activate(Page.MODS);
+        Path mods=service.paths().mods;
+        runAsync("Checking "+(zips.size()==1?zips.get(0).getFileName().toString():zips.size()+" ZIP files"),false,()->{
+            Files.createDirectories(mods);
+            ModInstaller.removeLeftovers(mods);
+            List<ModInstaller.Checked> ok=new ArrayList<>();List<String> refused=new ArrayList<>();
+            Set<String> ids=new HashSet<>();
+            for(Path zip:zips){
+                String file=zip.getFileName().toString();
+                if(!file.toLowerCase(Locale.ROOT).endsWith(".zip")){refused.add(file+" isn't a ZIP");continue;}
+                try{
+                    ModInstaller.Checked c=ModInstaller.check(zip,mods);
+                    if(ids.add(c.id()))ok.add(c);else refused.add(file+" has the same mod as another ZIP");
+                }catch(IOException ex){refused.add(file+" can't be added: "+ex.getMessage());}
+            }
+            return new AddChecks(ok,refused);
+        },checks->installChecked(checks.ok(),checks.refused()));
+    }
+    private void installChecked(List<ModInstaller.Checked> ok,List<String> refused){
+        List<ModInstaller.Checked> replacing=ok.stream().filter(ModInstaller.Checked::replaces).toList();
+        List<ModInstaller.Checked> go=new ArrayList<>(ok);
+        List<String> kept=new ArrayList<>();
+        if(!replacing.isEmpty()){
+            List<String> lines=new ArrayList<>();
+            for(ModInstaller.Checked c:replacing)lines.add(c.name()+" "+c.installedVersion()+" → "+c.version());
+            boolean one=replacing.size()==1;
+            if(!PromptDialog.confirm(frame,one?"Replace "+replacing.get(0).name()+"?":"Replace "+replacing.size()+" installed mods?",
+                String.join("\n",lines),(one?"Its":"Their")+" ticks and settings stay.","Replace")){
+                go.removeAll(replacing);
+                for(ModInstaller.Checked c:replacing)kept.add(c.name());
+            }
+        }
+        if(go.isEmpty()){
+            List<String> parts=new ArrayList<>(refused);
+            if(!kept.isEmpty())parts.add("Kept "+String.join(", ",kept)+" as installed");
+            setStatus(parts.isEmpty()?"Nothing added.":String.join(". ",parts)+".");
+            return;
+        }
+        Path mods=service.paths().mods;
+        runAsync("Adding "+(go.size()==1?go.get(0).name():go.size()+" mods"),false,()->{
+            List<String> added=new ArrayList<>(),replaced=new ArrayList<>(),failed=new ArrayList<>();
+            for(ModInstaller.Checked c:go){
+                try{
+                    ModInstaller.install(c,mods);
+                    if(c.replaces())replaced.add(c.name()+" ("+c.installedVersion()+" → "+c.version()+")");else added.add(c.name());
+                }catch(IOException ex){failed.add(c.zip().getFileName()+" can't be added: "+ex.getMessage());}
+            }
+            return new AddResult(added,replaced,failed);
+        },r->{
+            List<String> parts=new ArrayList<>();
+            if(!r.added().isEmpty())parts.add("Added "+String.join(", ",r.added())+"; tick "+(r.added().size()==1?"it":"them")+" to load "+(r.added().size()==1?"it":"them"));
+            if(!r.replaced().isEmpty())parts.add("Replaced "+String.join(", ",r.replaced()));
+            if(!kept.isEmpty())parts.add("Kept "+String.join(", ",kept)+" as installed");
+            parts.addAll(refused);parts.addAll(r.failed());
+            String summary=String.join(". ",parts)+".";
+            setStatus(summary);
+            readEverything(false,()->setStatus(summary));
+        });
+    }
+
     // =====================================================================================
     // Reading, and working out what blocks Load
     // =====================================================================================
     private record Read(PackageInventory.Snapshot snapshot,MapPacks.Data maps,Map<String,List<String>> choices,Map<String,Boolean> ticks){}
 
     /** Reads mods, components and maps off the event thread (it hashes bitwig.jar), then shows them. */
-    private void readEverything(boolean first){
+    private void readEverything(boolean first){readEverything(first,null);}
+    /** As above, then does {@code then}, if any, once the new read is shown. */
+    private void readEverything(boolean first,Runnable then){
         long generation=++readGeneration;
         new SwingWorker<Read,Void>(){
             @Override protected Read doInBackground() throws Exception {
@@ -871,7 +979,8 @@ final class PatchbayWindow {
                     if(page==Page.SETTINGS)fillSettings();
                     if(!wasLoaded&&!sessionRunning)setStatus(readyText());
                     if(!back.isEmpty())setStatus("Enabled "+String.join(", ",back)+" again: a ticked mod needs "+(back.size()==1?"it.":"them."));
-                    runToolChecks(null);
+                    // A tool problem found after an add would reset the status line: say the add's result after it.
+                    runToolChecks(then);
                 }catch(Exception ex){
                     Throwable t=ex.getCause()==null?ex:ex.getCause();
                     loaded=true;setStatus("Mods couldn't be read: "+t.getMessage());updateControls();
@@ -1809,7 +1918,7 @@ final class PatchbayWindow {
         boolean showDebugBox=!service.config().hideDebugMode();
         debugMode.setVisible(showDebugBox);debugMode.setEnabled(!busy&&!sessionRunning);
         if(!showDebugBox)debugMode.setSelected(false);
-        refresh.setEnabled(!busy);selectAll.setEnabled(!busy&&loaded);
+        refresh.setEnabled(!busy);selectAll.setEnabled(!busy&&loaded);addMod.setEnabled(!busy&&loaded);
         long loadable=modEntries().stream().filter(PackageInventory.Entry::loadable).count();
         long on=modEntries().stream().filter(PackageInventory.Entry::loadable).filter(this::ticked).count();
         selectAll.setText(loadable>0&&on==loadable?"Deselect All":"Select All");

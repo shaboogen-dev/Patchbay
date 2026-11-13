@@ -4,7 +4,7 @@
     "id": "inspector-composition-framework",
     "name": "Framework: Inspector",
     "area": "Framework",
-    "version": "0.3.0-dev.1",
+    "version": "0.3.0-dev.2",
     "author": "shaboogen",
     "description": "Lets mods add their own blocks to Bitwig's Inspector, and rows to its Device block, built from Bitwig's own widgets.",
     "documentation": "readme"

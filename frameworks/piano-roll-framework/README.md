@@ -1,6 +1,6 @@
 # Framework: Piano Roll
 
-Lets a mod read the selected notes, the editor's grid step and the key signature, find where notes overlap and add, copy, move, edit and select notes as one Undo step, show a plan as Bitwig's own preview notes before applying it, mark notes with Bitwig's eraser stripes, and hear when the selection or the project changes, in plain Java with no Bitwig names. A mod using only this API has no hooks, no opened members and nothing for BML to translate.
+Lets a mod read the selected notes, the editor's grid step and the key signature, find where notes overlap and add, copy, move, edit and select notes as one Undo step, show a plan as Bitwig's own preview notes before applying it, mark notes with Bitwig's eraser stripes, and hear when the selection or the project changes, in plain Java with no Bitwig names. A mod using only this API has no hooks, no opened members and nothing for Patchbay to translate.
 
 It is a mechanism. It adds no menu entries, decides no musical rules and shows nothing to the user unless a mod asks: what to do with the notes, and which of them to refuse, is the mod's.
 
@@ -249,7 +249,7 @@ Both return a `Listening`; `stop()` ends it. Nothing is watched until a mod firs
 
 ## Other versions
 
-The framework's Bitwig names are translated by BML like any mod's. If a future Bitwig has no counterpart for one of them, the framework isn't available on that version, and neither are the mods that require it.
+The framework's Bitwig names are translated by Patchbay like any mod's. If a future Bitwig has no counterpart for one of them, the framework isn't available on that version, and neither are the mods that require it.
 
 ## What it does in Bitwig
 

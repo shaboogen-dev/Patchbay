@@ -14,7 +14,7 @@ so pointing it at a scratch copy of `mods/`, `maps/` and `components/` touches n
 user's. `java -jar bml-control.jar --self-test` checks the window's data side (ticks, sessions,
 manifests, tools, settings folder, components).
 
-`PatchbayDisabledSmoke.java` drives Disable Mod, Show Disabled and Enable Mod through the window's
+`PatchbayDisabledSmoke.java` drives Disable Mod, the Show dropdown's Disabled choice and Enable Mod through the window's
 own code over a test install (one with `config/portable`), and checks that a ticked mod's
 prerequisite can't be disabled and that ticking a mod enables its disabled prerequisite again. It
 adds a mod with an error for the run and removes it after; prints `DISABLE_SMOKE_OK`:

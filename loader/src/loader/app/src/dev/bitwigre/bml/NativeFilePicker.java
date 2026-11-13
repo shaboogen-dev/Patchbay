@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.File;
 import java.nio.file.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * Opens a file with the system's own file dialog (java.awt.FileDialog, which is the Windows
@@ -36,6 +37,26 @@ final class NativeFilePicker {
         if(name==null||dir==null)return null;
         Path chosen=Path.of(dir,name);
         if(chosen.getParent()!=null)lastFolders.put(key,chosen.getParent());
+        return chosen;
+    }
+
+    /** The chosen files, several at once; empty if the dialog was cancelled. */
+    static List<Path> openMany(Frame owner,String key,String title,String extension){
+        FileDialog dialog=new FileDialog(owner,title,FileDialog.LOAD);
+        dialog.setMultipleMode(true);
+        Path folder=startFolder(key,null);
+        if(folder!=null)dialog.setDirectory(folder.toString());
+        if(extension!=null){
+            String suffix="."+extension.toLowerCase(Locale.ROOT);
+            dialog.setFilenameFilter((dir,name)->name.toLowerCase(Locale.ROOT).endsWith(suffix));
+            if(System.getProperty("os.name","").toLowerCase(Locale.ROOT).contains("win"))dialog.setFile("*"+suffix);
+        }
+        dialog.setVisible(true);
+        File[] files=dialog.getFiles();
+        dialog.dispose();
+        List<Path> chosen=new ArrayList<>();
+        for(File f:files)chosen.add(f.toPath());
+        if(!chosen.isEmpty()&&chosen.get(0).getParent()!=null)lastFolders.put(key,chosen.get(0).getParent());
         return chosen;
     }
 

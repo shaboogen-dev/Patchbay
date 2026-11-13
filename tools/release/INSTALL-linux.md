@@ -4,7 +4,7 @@
 
 **Disclaimer: Patchbay Mod Loader is not affiliated with Bitwig Studio or Bitwig GmbH. If anyone from Bitwig has any issues with this software, please contact me.**
 
-Patchbay Mod Loader changes Bitwig Studio's code when Bitwig starts, so mods can add to it or change how it behaves. Bitwig's own files on disk are never modified. This folder is a complete install for Linux: the loader, the map for every supported Bitwig version, the frameworks and every accepted mod, plus the mod kit and the modder guide. Its files and folders are named BML; the app is called Patchbay for short.
+Patchbay Mod Loader changes Bitwig Studio's code when Bitwig starts, so mods can add to it or change how it behaves. Bitwig's own files on disk are never modified. This folder is a complete install for Linux: the loader, the map for every supported Bitwig version and the frameworks, plus the mod kit and the modder guide. Mods are downloaded separately (below). Its files and folders are named BML; the app is called Patchbay for short.
 
 ## What you need
 
@@ -31,9 +31,19 @@ Patchbay Mod Loader changes Bitwig Studio's code when Bitwig starts, so mods can
 4. Go to **Settings**. Under **Bitwig Studio** it shows the Bitwig executable it found (`/opt/bitwig-studio/bitwig-studio`). If it says not found, click **Browse…**, pick `bitwig-studio` in the folder Bitwig is installed in. Choosing it saves it.
 5. Go to **Maps**. It must say **Bitwig Studio <your version> is supported**. If it says there is no map for the installed Bitwig, your Bitwig version isn't one of those above: stop here and report it.
 
+## Add mods
+
+Each mod is its own ZIP, on the Mods releases page: https://github.com/shaboogen-dev/Mods/releases. Its notes say which mods need another mod (for example, Audio Clip: Detect Key needs Helper: Audio Analysis) and which aren't available on some Bitwig versions.
+
+1. Download the mod ZIPs you want. Don't unpack them.
+2. In the Patchbay window, go to **Mods** and click **Add Mod…** (or drag the ZIPs onto the window). You can pick several at once. Patchbay checks each ZIP before installing it and says why if it can't.
+3. To update a mod, add its newer ZIP the same way: Patchbay asks before replacing it, and its tick and settings stay.
+
+Mods are installed in the `mods` folder of this install. Unpacking a new version of Patchbay to a new folder starts without them: add them again, or copy their folders across from the old `mods` folder.
+
 ## Choose mods and start Bitwig
 
-1. Go to **Mods**. Every mod is listed; ticked mods are loaded at the next start.
+1. Go to **Mods**. Every installed mod is listed, the frameworks included; ticked mods are loaded at the next start.
    - A greyed-out mod whose tick box can't be ticked isn't available on your Bitwig version: its description starts with `Not available on …`, and the **Errors** page says why. Ticking a mod also ticks the mods it needs. Every ticked mod must be able to load: if one can't (a mod it needs is turned off, or it isn't available on your Bitwig version), its row turns red, the **Errors** page lists it with how to fix it, and **Load** refuses until it is fixed.
    - **Framework: Themes** stays unticked and unavailable until a theme is installed, and the **Errors** page lists it for that reason. This release ships no theme. To add one, put its `.bte` file, or a folder holding it, in the `components/` folder beside `mods/`, tick the framework, select its row and choose the theme in the bar at the bottom of the window. Unpacking a new version of BML starts a new `components/` folder: copy your themes across.
 2. Tick or untick mods. Click a mod's row to select it: the bar at the bottom of the window shows its description and its buttons, including **README** for its documentation. Click the row again, or press Esc, to deselect it. To set a mod aside without uninstalling it, right-click it and choose **Disable Mod**: it leaves the list and is never loaded. **Show Disabled** lists it again, with **Enable Mod**.

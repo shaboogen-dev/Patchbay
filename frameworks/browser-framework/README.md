@@ -172,4 +172,4 @@ public final class MyBrowser implements BrowserProvider {
 - A provider that can't be loaded or throws in `declare` is logged and skipped; other mods are unaffected. A view whose `onActive` throws loses its claims.
 - A view's content or results factory that throws or returns something that isn't a widget, and any callback a view hands a panel that throws (`onDispose`, `onPreviewLoaded`, `done`, `results`), make the view's claims and content lapse (logged): the browser is rebuilt with Bitwig's own content.
 - A panel helper that Bitwig refuses or that fails is logged and returns `false`, null, `NaN`, `-1` or an empty list; it never throws.
-- The framework keeps only the chosen view and the stored values of the deprecated `set`, in `mods/browser-framework/settings.properties` in BML's settings folder (**Settings > Settings Folder** in BML's window shows where). What a mod hides isn't stored.
+- The framework keeps only the chosen view and the stored values of the deprecated `set`, in `mods/browser-framework/settings.properties` in Patchbay's settings folder (**Settings > Settings Folder** in Patchbay's window shows where). What a mod hides isn't stored.

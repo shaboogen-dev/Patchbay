@@ -9,7 +9,7 @@ final class BmlConfig {
     static final String BITWIG_EXE = "bitwig.executable";
     static final String HIDE_DEBUG_MODE = "ui.hide_debug_mode";
     static final String DISABLED_MODS = "mods.disabled";
-    static final String SHOW_DISABLED = "ui.mods.show_disabled";
+    static final String MODS_SHOW = "ui.mods.show";
     private final BmlPaths paths;
     private final Properties props = new Properties();
 
@@ -100,14 +100,14 @@ final class BmlConfig {
         else props.setProperty(DISABLED_MODS, value);
     }
 
-    /** Whether the Mods list shows disabled mods too; off unless turned on. */
-    boolean showDisabledMods() {
-        return "true".equalsIgnoreCase(props.getProperty(SHOW_DISABLED, "false").trim());
+    /** The Mods list's Show choice (All, Ticked, Unticked or Disabled); All unless chosen. */
+    String modsShow() {
+        return props.getProperty(MODS_SHOW, "All").trim();
     }
 
-    void setShowDisabledMods(boolean show) {
-        if (show) props.setProperty(SHOW_DISABLED, "true");
-        else props.remove(SHOW_DISABLED);
+    void setModsShow(String show) {
+        if (show == null || show.isBlank() || "All".equals(show)) props.remove(MODS_SHOW);
+        else props.setProperty(MODS_SHOW, show);
     }
 
     void save() throws IOException {
