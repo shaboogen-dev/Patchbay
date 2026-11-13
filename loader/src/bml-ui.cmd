@@ -1,5 +1,9 @@
 @echo off
 setlocal EnableExtensions
+rem Windows' own tools (findstr, tasklist, PowerShell) are found even when PATH doesn't list them.
+if not defined SystemRoot set "SystemRoot=%SystemDrive%\Windows"
+set "PATH=%SystemRoot%\System32;%SystemRoot%;%SystemRoot%\System32\WindowsPowerShell\v1.0;%PATH%"
+if not defined PATHEXT set "PATHEXT=.COM;.EXE;.BAT;.CMD"
 for %%I in ("%~dp0.") do set "ROOT=%%~fI"
 set "APP=%ROOT%\loader\app\bml-control.jar"
 if not exist "%APP%" goto noapp

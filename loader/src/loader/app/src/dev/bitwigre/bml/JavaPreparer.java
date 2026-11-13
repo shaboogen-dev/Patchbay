@@ -22,7 +22,7 @@ import java.util.regex.*;
  * Experimental implementation: requires Windows 6.1.3 user runtime acceptance.
  */
 public final class JavaPreparer {
-    static final String LOADER_VERSION = "0.36.0-dev.13";
+    static final String LOADER_VERSION = "0.36.0-dev.14";
     private static final String TSV = "\t";
     private final Path loader, bitwigBin, modsRoot, componentsRoot, runtime, stockJar;
     private final BmlPaths paths;

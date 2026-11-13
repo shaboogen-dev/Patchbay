@@ -1,5 +1,9 @@
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
+rem Windows' own tools (findstr, tasklist, PowerShell) are found even when PATH doesn't list them.
+if not defined SystemRoot set "SystemRoot=%SystemDrive%\Windows"
+set "PATH=%SystemRoot%\System32;%SystemRoot%;%SystemRoot%\System32\WindowsPowerShell\v1.0;%PATH%"
+if not defined PATHEXT set "PATHEXT=.COM;.EXE;.BAT;.CMD"
 set "ROOT=%~dp0"
 set "CORE=%ROOT%loader"
 set "MODS=%ROOT%mods"
