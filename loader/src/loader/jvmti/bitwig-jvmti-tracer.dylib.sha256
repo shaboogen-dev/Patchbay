@@ -1,0 +1,16 @@
+# The macOS agent, bitwig-jvmti-tracer.dylib, as build-agent-mac.sh (beside this file) builds it
+# on a Mac. Build outputs never go into git (standard 12), so this records the build instead:
+# the pinned toolchain (standard 11), the SHA-256 of every input and of the result. loader/build.py
+# takes a Mac-built dylib into a release only while these inputs are the source's and the file's
+# SHA-256 is dylib; after a change to an input, the agent is rebuilt on a Mac and this file updated
+# from the build's BML_MAC_AGENT line.
+clt=26.6.0.0.1781586589
+clang=Apple clang version 21.0.0 (clang-2100.1.1.101)
+sdk=26.5
+target=12.0
+src/bitwig_jvmti_tracer.cpp=281ce7a6b9ba3750a8837efa9e3199d0469438ac6e6ad1ff8789c0b5a7fcad65
+include/darwin/jni_md.h=e7b2b9ba31ff7753e80747c14731d626155758b733e225dfd9074f722b35c108
+build-agent-mac.sh=86ed6c1d44dfb3b304847e8fbd35d3c2816e871b291c4e839fe7f196d8a6d94c
+jdk-include/jni.h=6059b8dcdfed1f6299006bb6e8d7a72f2344eedfaa74650281a39fd634afdbbc
+jdk-include/jvmti.h=4931d9a24e82e96398be03aef20551348078a401d94b42dcd3c50fb0b2af072f
+dylib=42f14252ba08ddf25786bbf4852bdf210cdd12e5b6be7924da8fe77653d564d0

@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+  "mod": {
+    "id": "preferences-composition-framework",
+    "name": "Framework: Settings",
+    "area": "Framework",
+    "version": "1.0.0",
+    "author": "shaboogen",
+    "description": "Lets mods put their options in Bitwig's Settings, using Bitwig's own controls: in Bitwig's own sections, in new sections on any page, or on a page of their own.",
+    "documentation": "readme"
+  },
+  "built_against": {
+    "bitwig_version": "6.1.4",
+    "platform": "windows",
+    "architecture": "x64"
+  },
+  "resources": {
+    "readme": {
+      "kind": "file",
+      "path": "README.md",
+      "media_type": "text/markdown"
+    }
+  }
+}

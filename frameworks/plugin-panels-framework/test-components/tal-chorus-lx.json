@@ -1,0 +1,66 @@
+{
+  "match": { "name": "TAL-Chorus-LX", "vendor": "TAL-Togu Audio Line" },
+  "dividers": true,
+  "title": false,
+  "toolbar": {
+    "position": "right",
+    "order": ["list", "programs", "sidechain", "outputs", "spacer", "layout", "container"],
+    "background": "Device Header"
+  },
+  "fill_height": true,
+  "columns": [
+    {
+      "align": "center",
+      "items": [
+        { "spacer": true },
+        { "row": [
+          {
+            "knob": "Volume",
+            "size": 34,
+            "value_format": { "range": [0, 100], "decimals": 0, "unit": "%" },
+            "values": { "min": 0, "max": 100, "unit": "%" },
+            "width": 54
+          }
+        ], "gap": 4 },
+        { "spacer": true },
+        { "row": [
+          {
+            "knob": "Stereo",
+            "size": 34,
+            "label": "Width",
+            "value_format": { "range": [0, 100], "decimals": 0, "unit": "%" },
+            "values": { "min": 0, "max": 100, "unit": "%" },
+            "width": 54
+          }
+        ], "gap": 4 },
+        { "spacer": true }
+      ]
+    },
+    {
+      "padding": [10, 7, 0, 0],
+      "items": [
+        { "spacer": true },
+        { "row": [
+          { "toggle": "Chorus 1", "label": "I", "width": 54 }
+        ], "gap": 4 },
+        { "row": [
+          { "toggle": "Chorus 2", "label": "II", "width": 54 }
+        ], "gap": 4 },
+        { "row": [
+          { "toggle": "Compatible with version <= 1.3.1", "label": "Old", "width": 54 }
+        ], "gap": 4 },
+        { "spacer": true },
+        { "row": [
+          {
+            "knob": "Dry / Wet",
+            "size": 34,
+            "value_format": { "range": [0, 100], "decimals": 0, "unit": "%" },
+            "values": { "min": 0, "max": 100, "unit": "%" },
+            "width": 54
+          }
+        ], "gap": 4, "padding": [0, 0, 0, 2] },
+        { "spacer": true }
+      ]
+    }
+  ]
+}

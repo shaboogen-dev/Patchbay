@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "package_type": "mod",
+  "mod": {
+    "id": "bte-theme-loader",
+    "name": "Framework: Themes",
+    "area": "Framework",
+    "version": "0.10.0-dev.1",
+    "author": "shaboogen",
+    "description": "Applies the theme you choose in Patchbay: its colours, from a Bitwig Theme Editor .bte file, and its own icons and images.",
+    "tags": [
+      "Appearance",
+      "Theme"
+    ],
+    "documentation": "readme"
+  },
+  "built_against": {
+    "bitwig_version": "6.1.4",
+    "platform": "windows",
+    "architecture": "x64"
+  },
+  "resources": {
+    "readme": {
+      "kind": "file",
+      "path": "README.md",
+      "media_type": "text/markdown"
+    }
+  },
+  "component_groups": {
+    "themes": {
+      "name": "Themes",
+      "selection": "single",
+      "interface_version": "1",
+      "required_resources": {
+        "theme": {
+          "kind": "file"
+        }
+      },
+      "detect": {
+        "theme": "*.bte",
+        "overlays": "overlays/"
+      }
+    }
+  }
+}

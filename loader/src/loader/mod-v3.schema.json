@@ -1,0 +1,937 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bml.local/schema/mod-v3.json",
+  "title": "BML Manifest v3 (mod or component)",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "manifest_version",
+        "package_type",
+        "mod",
+        "built_against",
+        "targets",
+        "hooks"
+      ],
+      "properties": {
+        "mod": {
+          "type": "object",
+          "required": [
+            "id",
+            "name",
+            "version",
+            "author",
+            "description"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "author": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1
+            },
+            "area": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60,
+              "pattern": "\\S"
+            },
+            "homepage": {
+              "type": "string",
+              "maxLength": 2000,
+              "pattern": "^[Hh][Tt][Tt][Pp][Ss]?://[^\\s]+$"
+            },
+            "documentation": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false
+        },
+        "built_against": {
+          "type": "object",
+          "required": [
+            "bitwig_version",
+            "platform",
+            "architecture"
+          ],
+          "properties": {
+            "bitwig_version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "platform": {
+              "type": "string",
+              "minLength": 1
+            },
+            "architecture": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "helper": {
+          "type": "object",
+          "required": [
+            "jar",
+            "class"
+          ],
+          "properties": {
+            "jar": {
+              "type": "string",
+              "minLength": 1
+            },
+            "class": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "targets": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+          },
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "class"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "class"
+                  },
+                  "class": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "owner",
+                  "name",
+                  "descriptor"
+                ],
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "method",
+                      "field"
+                    ]
+                  },
+                  "owner": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "descriptor": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "fields": {
+          "description": "Instance fields BML adds to Bitwig classes. The owner is a class target; the name starts with the mod's ID, every character but letters and digits as _, then $.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "owner", "name", "descriptor"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$" },
+              "owner": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$" },
+              "name": { "type": "string", "pattern": "^[A-Za-z0-9_]+[$][A-Za-z_][A-Za-z0-9_$]*$" },
+              "descriptor": { "type": "string", "pattern": "^\\[*([ZBCSIJFD]|L[A-Za-z0-9_$/]+;)$" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "opens": {
+          "description": "Local target IDs of non-public Bitwig classes, fields and methods the helper uses directly; BML makes them public in the prepared runtime.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+          }
+        },
+        "hooks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "target",
+              "transform",
+              "bridge"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+              },
+              "target": {
+                "type": "string",
+                "minLength": 1
+              },
+              "transform": {
+                "enum": [
+                  "INSERT_BEFORE_FINAL_RETURN",
+                  "INSERT_AT_ENTRY",
+                  "WRAP_OBJECT_RETURN",
+                  "REPLACE_INVOKE",
+                  "ADD_METHOD"
+                ]
+              },
+              "bridge": {
+                "type": "object",
+                "required": [
+                  "method",
+                  "descriptor",
+                  "args"
+                ],
+                "properties": {
+                  "method": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "descriptor": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "args": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^(this|arg[0-9]+)$"
+                    }
+                  }
+                },
+                "additionalProperties": false
+              },
+              "match": {
+                "type": "object",
+                "required": [
+                  "opcode"
+                ],
+                "properties": {
+                  "opcode": {
+                    "enum": [
+                      "INVOKEVIRTUAL",
+                      "INVOKESPECIAL",
+                      "INVOKESTATIC",
+                      "INVOKEINTERFACE",
+                  "AUTO_INSTANCE"
+                    ]
+                  },
+                  "target": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "owner": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "descriptor": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "occurrence": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "default": 1
+                  }
+                },
+                "oneOf": [
+                  {
+                    "required": [
+                      "target"
+                    ],
+                    "not": {
+                      "anyOf": [
+                        {
+                          "required": [
+                            "owner"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "name"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "descriptor"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "required": [
+                      "owner",
+                      "name",
+                      "descriptor"
+                    ],
+                    "not": {
+                      "required": [
+                        "target"
+                      ]
+                    }
+                  }
+                ],
+                "additionalProperties": false
+              },
+              "method": {
+                "type": "object",
+                "required": [
+                  "from_target"
+                ],
+                "properties": {
+                  "from_target": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "descriptor": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": false
+              },
+              "body": {
+                "type": "object",
+                "required": [
+                  "template"
+                ],
+                "properties": {
+                  "template": {
+                    "enum": [
+                      "CALL_SUPER_THEN_STATIC",
+                      "CALL_STATIC_THEN_SUPER",
+                      "CALL_STATIC_ONLY"
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              },
+              "ordering": {
+                "type": "object",
+                "properties": {
+                  "before": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "mod",
+                        "hook"
+                      ],
+                      "properties": {
+                        "mod": {
+                          "type": "string",
+                          "minLength": 1,
+                          "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+                        },
+                        "hook": {
+                          "type": "string",
+                          "minLength": 1,
+                          "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "after": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "mod",
+                        "hook"
+                      ],
+                      "properties": {
+                        "mod": {
+                          "type": "string",
+                          "minLength": 1,
+                          "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+                        },
+                        "hook": {
+                          "type": "string",
+                          "minLength": 1,
+                          "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "transform": {
+                      "const": "REPLACE_INVOKE"
+                    }
+                  },
+                  "required": [
+                    "transform"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "match"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "transform": {
+                      "const": "ADD_METHOD"
+                    }
+                  },
+                  "required": [
+                    "transform"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "method",
+                    "body"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "required": [
+                    "ordering"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "transform": {
+                      "const": "INSERT_AT_ENTRY"
+                    }
+                  }
+                }
+              }
+            ],
+            "additionalProperties": false
+          }
+        },
+        "trace_targets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+              },
+              "target": {
+                "type": "string",
+                "minLength": 1
+              },
+              "class": {
+                "type": "string",
+                "minLength": 1
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "descriptor": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "oneOf": [
+              {
+                "required": [
+                  "target"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "class"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "method"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "descriptor"
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "required": [
+                  "class",
+                  "method",
+                  "descriptor"
+                ],
+                "not": {
+                  "required": [
+                    "target"
+                  ]
+                }
+              }
+            ],
+            "additionalProperties": false
+          }
+        },
+        "requires": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+              },
+              "min_version": {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "registrations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "consumer",
+              "descriptor",
+              "jar"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+              },
+              "consumer": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+              },
+              "descriptor": {
+                "type": "string",
+                "minLength": 1
+              },
+              "jar": {
+                "type": "string",
+                "pattern": "\\.[Jj][Aa][Rr]$"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "bml_tools": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": [
+              "resource",
+              "key"
+            ],
+            "properties": {
+              "resource": {
+                "type": "string"
+              },
+              "key": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "resources": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "required": [
+              "kind",
+              "path"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "file",
+                  "directory"
+                ]
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "media_type": {
+                "type": "string",
+                "minLength": 1
+              },
+              "persistence": {
+                "enum": [
+                  "replaceable",
+                  "preserve",
+                  "created"
+                ],
+                "default": "replaceable"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "package_type": {
+          "const": "mod"
+        },
+        "manifest_version": {
+          "const": 3
+        },
+        "component_groups": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "required": [
+              "name",
+              "selection"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "selection": {
+                "enum": [
+                  "single",
+                  "multiple"
+                ]
+              },
+              "interface_version": {
+                "type": "string",
+                "pattern": "^[0-9]+$",
+                "default": "1"
+              },
+              "minimum": {
+                "description": "How many components must be chosen; only for selection multiple (default 1). 0 lets the mod load with none.",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000,
+                "default": 1
+              },
+              "required_resources": {
+                "type": "object",
+                "propertyNames": {
+                  "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+                },
+                "additionalProperties": {
+                  "type": "object",
+                  "required": [
+                    "kind"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "file",
+                        "directory"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "detect": {
+                "type": "object",
+                "minProperties": 1,
+                "propertyNames": {
+                  "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+                },
+                "additionalProperties": {
+                  "type": "string",
+                  "pattern": "^([A-Za-z0-9_-][A-Za-z0-9_.-]*/|[A-Za-z0-9_.*?-]*[A-Za-z0-9_.-][A-Za-z0-9_.*?-]*)$"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "diagnostics": {
+          "type": "object",
+          "required": [
+            "outputs"
+          ],
+          "properties": {
+            "outputs": {
+              "type": "object",
+              "minProperties": 1,
+              "propertyNames": {
+                "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "path"
+                ],
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "file",
+                      "directory"
+                    ]
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "allOf": [
+        {
+          "anyOf": [
+            {
+              "properties": {
+                "hooks": {
+                  "minItems": 1
+                }
+              },
+              "required": [
+                "hooks"
+              ]
+            },
+            {
+              "properties": {
+                "trace_targets": {
+                  "minItems": 1
+                }
+              },
+              "required": [
+                "trace_targets"
+              ]
+            },
+            {
+              "properties": {
+                "registrations": {
+                  "minItems": 1
+                }
+              },
+              "required": [
+                "registrations"
+              ]
+            }
+          ]
+        },
+        {
+          "if": {
+            "properties": {
+              "hooks": {
+                "minItems": 1
+              }
+            },
+            "required": [
+              "hooks"
+            ]
+          },
+          "then": {
+            "required": [
+              "helper"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "manifest_version",
+        "package_type",
+        "component"
+      ],
+      "properties": {
+        "manifest_version": {
+          "const": 3
+        },
+        "package_type": {
+          "const": "component"
+        },
+        "component": {
+          "type": "object",
+          "required": [
+            "id",
+            "name",
+            "version",
+            "author",
+            "description",
+            "parent",
+            "group"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "author": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1
+            },
+            "documentation": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "uniqueItems": true
+            },
+            "parent": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            },
+            "group": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+            },
+            "interface_version": {
+              "type": "string",
+              "pattern": "^[0-9]+$",
+              "default": "1"
+            }
+          },
+          "additionalProperties": false
+        },
+        "resources": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "required": [
+              "kind",
+              "path"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "file",
+                  "directory"
+                ]
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "media_type": {
+                "type": "string",
+                "minLength": 1
+              },
+              "persistence": {
+                "enum": [
+                  "replaceable",
+                  "preserve"
+                ],
+                "default": "replaceable"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  ]
+}

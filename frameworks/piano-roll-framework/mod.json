@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+  "mod": {
+    "id": "piano-roll-framework",
+    "name": "Framework: Piano Roll",
+    "area": "Framework",
+    "version": "0.2.0-dev.1",
+    "author": "shaboogen",
+    "description": "Lets mods read the notes selected in a note editor, preview a change as Bitwig's own preview notes, and apply it as one Undo step.",
+    "documentation": "readme"
+  },
+  "built_against": {
+    "bitwig_version": "6.1.4",
+    "platform": "windows",
+    "architecture": "x64"
+  },
+  "resources": {
+    "readme": {
+      "kind": "file",
+      "path": "README.md",
+      "media_type": "text/markdown"
+    }
+  }
+}

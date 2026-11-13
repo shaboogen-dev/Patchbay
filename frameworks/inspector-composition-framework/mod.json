@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+  "mod": {
+    "id": "inspector-composition-framework",
+    "name": "Framework: Inspector",
+    "area": "Framework",
+    "version": "0.3.0-dev.1",
+    "author": "shaboogen",
+    "description": "Lets mods add their own blocks to Bitwig's Inspector, and rows to its Device block, built from Bitwig's own widgets.",
+    "documentation": "readme"
+  },
+  "built_against": {
+    "bitwig_version": "6.1.4",
+    "platform": "windows",
+    "architecture": "x64"
+  },
+  "resources": {
+    "readme": {
+      "kind": "file",
+      "path": "README.md",
+      "media_type": "text/markdown"
+    }
+  }
+}

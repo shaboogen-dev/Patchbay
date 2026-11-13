@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "package_type": "mod",
+  "mod": {
+    "id": "plugin-panels-framework",
+    "name": "Framework: Plug-in Panels",
+    "version": "0.3.0-dev.2",
+    "author": "shaboogen",
+    "description": "Shows a plug-in's parameters as a panel of Bitwig's own knobs, dropdowns and buttons, laid out by a panel file you choose.",
+    "area": "Framework",
+    "documentation": "readme"
+  },
+  "built_against": {
+    "bitwig_version": "6.1.4",
+    "platform": "windows",
+    "architecture": "x64"
+  },
+  "requires": [
+    { "id": "action-menu-composition-framework", "min_version": "0.6.0-dev.1" }
+  ],
+  "resources": {
+    "readme": {
+      "kind": "file",
+      "path": "README.md",
+      "media_type": "text/markdown"
+    }
+  },
+  "component_groups": {
+    "panels": {
+      "name": "Panels",
+      "selection": "multiple",
+      "minimum": 0,
+      "interface_version": "1",
+      "required_resources": {
+        "panel": { "kind": "file" }
+      },
+      "detect": { "panel": "*.json" }
+    }
+  },
+  "registrations": [
+    {
+      "id": "actions",
+      "consumer": "action-menu-composition-framework",
+      "descriptor": "actions.properties",
+      "jar": "helper.jar"
+    }
+  ]
+}

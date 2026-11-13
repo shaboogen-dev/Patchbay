@@ -1,0 +1,22 @@
+{
+  "match": { "name": "ShaperBox 3" },
+  "toolbar": { "position": "right", "background": "Grey 3", "divider": true, "list": true,
+               "order": ["container", "spacer", "layout", "list", "programs", "sidechain", "outputs"] },
+  "min_resolved": 50,
+  "label_font": "Small",
+  "columns": [
+    {
+      "header": "SHAPERBOX 3",
+      "header_font": "Uppercase header",
+      "items": [
+        { "row": [
+          { "knob": "Master Mix", "label": "MIX" },
+          { "knob": "Time Low Mix", "label": "LOW" },
+          { "knob": "Time Mid Mix", "label": "MID" },
+          { "knob": "Time High Mix", "label": "HIGH" },
+          { "toggle": "TimeShaper On", "label": "TIME", "width": 44, "valign": "center" }
+        ], "gap": 8 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "match": { "name": "Surge XT" },
+  "background": "Grey 1",
+  "toolbar": false,
+  "min_resolved": 50,
+  "label_height": 14,
+  "value_height": 14,
+  "gap": 8,
+  "columns": [
+    {
+      "header": "AMP EG",
+      "header_font": "Uppercase header",
+      "width": 224,
+      "items": [
+        { "envelope": {
+            "attack":  { "param": "A Amp EG Attack|Amp EG Attack",   "values": { "min": 0.00390625, "max": 32, "unit": "s", "curve": "log" } },
+            "decay":   { "param": "A Amp EG Decay|Amp EG Decay",     "values": { "min": 0.00390625, "max": 32, "unit": "s", "curve": "log" } },
+            "sustain": "A Amp EG Sustain|Amp EG Sustain",
+            "release": { "param": "A Amp EG Release|Amp EG Release", "values": { "min": 0.00390625, "max": 32, "unit": "s", "curve": "log" } }
+          }, "scale": "log", "width": 224, "height": 56 },
+        { "row": [
+          { "knob": "A Amp EG Attack|Amp EG Attack",   "size": 28, "label": "A", "font": "Small" },
+          { "knob": "A Amp EG Decay|Amp EG Decay",     "size": 28, "label": "D", "font": "Small" },
+          { "knob": "A Amp EG Sustain|Amp EG Sustain", "size": 28, "label": "S", "font": "Small" },
+          { "knob": "A Amp EG Release|Amp EG Release", "size": 28, "label": "R", "font": "Small" }
+        ], "gap": 4 }
+      ]
+    },
+    {
+      "header": "FILTER EG",
+      "header_font": "Uppercase header",
+      "divider": true,
+      "width": 224,
+      "items": [
+        { "envelope": {
+            "attack":  "A Filter EG Attack|Filter EG Attack",
+            "decay":   "A Filter EG Decay|Filter EG Decay",
+            "sustain": "A Filter EG Sustain|Filter EG Sustain",
+            "release": "A Filter EG Release|Filter EG Release"
+          }, "width": 224, "height": 56, "color": "Knob Value Color", "points": false },
+        { "row": [
+          { "knob": "A Filter EG Attack|Filter EG Attack",   "size": 28, "label": "A", "font": "Small" },
+          { "knob": "A Filter EG Decay|Filter EG Decay",     "size": 28, "label": "D", "font": "Small" },
+          { "knob": "A Filter EG Sustain|Filter EG Sustain", "size": 28, "label": "S", "font": "Small" },
+          { "knob": "A Filter EG Release|Filter EG Release", "size": 28, "label": "R", "font": "Small" }
+        ], "gap": 4 }
+      ]
+    }
+  ]
+}

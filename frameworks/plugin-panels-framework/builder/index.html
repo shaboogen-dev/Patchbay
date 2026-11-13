@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plug-in Panels Builder</title>
+<link rel="stylesheet" href="builder.css">
+</head>
+<body>
+<header class="top">
+  <h1>Plug-in Panels <span>layout builder</span></h1>
+  <div class="tools">
+    <button id="b-new" title="A new layout, matched to the loaded parameter sheet (keeps the parameters and the theme)">New</button>
+    <button id="b-start-over" title="Clear the layout, the parameter sheet and the overlay, and go back to the default theme">Start over</button>
+    <button id="b-open" title="Open a parameter sheet, a layout or a BTE theme (or drop one on the page)">Open…</button>
+    <button id="b-paste" title="Paste a parameter sheet or a layout">Paste…</button>
+    <button id="b-basics" title="How big a panel can be, and how its parts are sized">Basics</button>
+    <span class="sep"></span>
+    <button id="b-undo" title="Undo (Ctrl+Z)">Undo</button>
+    <button id="b-redo" title="Redo (Ctrl+Y)">Redo</button>
+    <span class="sep"></span>
+    <select id="layout-pick" title="The file holds several layouts" hidden></select>
+    <button id="b-copy" title="Copy the panel JSON, for Save Panel from Clipboard on the plug-in in Bitwig">Copy JSON</button>
+    <button id="b-download" class="primary" title="Save the panel JSON, to put in Patchbay's components folder">Download</button>
+  </div>
+  <input id="file-input" type="file" accept=".json,.bte,application/json" multiple hidden>
+</header>
+
+<main class="grid">
+  <aside class="left">
+    <section class="panel outline-panel">
+      <h2>Outline</h2>
+      <div id="outline" class="outline"></div>
+    </section>
+    <section class="panel params-panel">
+      <h2>Parameters <span id="sheet-name" class="muted"></span> <button id="b-sheet-clear" class="small" title="Unload the parameter sheet" hidden>×</button></h2>
+      <input id="param-filter" type="search" placeholder="Filter parameters">
+      <div id="params" class="params"></div>
+    </section>
+  </aside>
+
+  <section class="center">
+    <div class="palette">
+      <span class="muted">Add</span>
+      <button data-add="knob">Knob</button>
+      <button data-add="dropdown">Dropdown</button>
+      <button data-add="toggle">Toggle</button>
+      <button data-add="value">Value</button>
+      <button data-add="slider">Slider</button>
+      <button data-add="meter">Meter</button>
+      <button data-add="text">Text</button>
+      <button data-add="envelope">Envelope</button>
+      <button data-add="spacer" title="Empty space that takes the spare width of its row or, with a column selected, the spare height of its column">Spacer</button>
+      <button data-add="row">Row</button>
+      <span class="sep"></span>
+      <button data-add="column">Column</button>
+      <button data-add="footer">Footer item</button>
+      <button data-add="page">Page</button>
+      <span class="sep"></span>
+      <button id="b-look" title="The panel's stripe and its mode colours (in the layout's settings)">Stripe &amp; modes</button>
+      <span class="grow"></span>
+      <label class="muted" title="Bitwig's UI scale: layout units to screen pixels">UI scale <select id="zoom"><option value="1">100%</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="1.75">175%</option><option value="2">200%</option><option value="2.5">250%</option><option value="3">300%</option></select></label>
+      <span class="guides muted">Show
+        <label title="Rulers in layout units, with the panel's width"><input id="g-rulers" type="checkbox"> rulers</label>
+        <label title="The parts of the device's height, labelled beside it"><input id="g-zones" type="checkbox"> heights</label>
+        <label title="Outline every column, row and cell; hover one for its size"><input id="g-boxes" type="checkbox"> boxes</label>
+        <label title="The selected (and hovered) item's edges: faint lines across the panel, their heights in layout units beside the device"><input id="g-edges" type="checkbox"> guides</label>
+        <label title="Zoom a layout that's too tall, as Bitwig does (to at most 60%)"><input id="g-fit" type="checkbox"> fit like Bitwig</label>
+      </span>
+      <label id="view-picker" class="muted" title="Preview the bar's modes: the layout, Bitwig's list, or Bitwig's other pages" hidden>View <select id="view-select"></select></label>
+      <label id="mode-picker" class="muted" title="Preview the panel in each mode of the layout's mode_colors" hidden>Mode <select id="mode-select"></select></label>
+      <label class="muted" title="The height Bitwig's log reports per panel: 'height available N units'">Available <input id="chain" type="number" min="0" step="1"></label>
+      <span id="theme-status" class="muted"></span><button id="b-theme-clear" class="small" title="Back to Bitwig's default theme" hidden>×</button>
+      <button id="b-overlay" title="Put a Bitwig screenshot over the preview to compare (at the same UI scale)">Overlay…</button>
+      <span id="overlay-tools" hidden><input id="overlay-opacity" type="range" min="0" max="1" step="0.05" value="0.5" title="Opacity"> x <input id="overlay-x" type="number" value="0" style="width:52px"> y <input id="overlay-y" type="number" value="0" style="width:52px"> <button id="overlay-clear">×</button></span>
+      <input id="overlay-input" type="file" accept="image/*" hidden>
+    </div>
+    <div id="stage" class="stage">
+      <div id="preview-wrap" class="preview-wrap"><div id="preview" class="preview"></div></div>
+      <div id="stage-note" class="stage-note"></div>
+    </div>
+    <div class="bottom">
+      <div class="tabs">
+        <button data-tab="problems" class="on">Problems <span id="problem-count"></span></button>
+        <button data-tab="json">JSON</button>
+      </div>
+      <div id="tab-problems" class="tab"><ul id="problems" class="problems"></ul></div>
+      <div id="tab-json" class="tab" hidden>
+        <textarea id="json" spellcheck="false"></textarea>
+        <div class="json-tools"><button id="b-json-apply">Apply edited JSON</button><span id="json-msg" class="muted"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="right">
+    <section class="panel">
+      <h2 id="insp-title">Inspector</h2>
+      <div id="inspector" class="inspector"></div>
+    </section>
+  </aside>
+</main>
+
+<dialog id="paste-dialog">
+  <form method="dialog">
+    <h2>Paste a parameter sheet or a layout</h2>
+    <textarea id="paste-text" spellcheck="false" placeholder='{ "sheet": "plugin-panels-parameter-sheet", ... }  or  { "match": { ... }, ... }'></textarea>
+    <p id="paste-msg" class="muted"></p>
+    <div class="dialog-tools"><button value="cancel">Cancel</button><button id="paste-load" value="default" class="primary">Load</button></div>
+  </form>
+</dialog>
+
+<dialog id="basics" class="basics">
+  <form method="dialog">
+    <h2>Basics</h2>
+    <h3>Units</h3>
+    <p>Every size in a layout is in <b>layout units</b>, Bitwig's own. Bitwig draws a unit as <span id="bx-scale-px"></span> screen pixels at your UI scale (<span id="bx-scale"></span>), so a layout looks the same at any scale. The preview draws at that scale too.</p>
+    <h3>Height: fixed by Bitwig, the one real limit</h3>
+    <p>Every device in the chain has the same height. Here it is <b><span id="bx-avail"></span> units</b> (what the framework logs as <i>height available</i> in Bitwig's log; set another under Available). Bitwig's plug-in toolbar takes <span id="bx-toolbar"></span> of it unless <code>"toolbar": false</code>, leaving <b><span id="bx-usable"></span></b> for the layout. A taller layout is zoomed down to fit, but not below <span id="bx-minzoom"></span>: so at most <span id="bx-maxlayout"></span> units of layout fit, and beyond that the bottom is cut off. Put controls side by side in rows to keep a layout short.</p>
+    <p>The layout's height, top to bottom: padding (<span id="bx-pad"></span>), the title line (the plug-in's name and, with pages, the page tabs, Bitwig's row height <span id="bx-row"></span>; leave it out with <code>"title": false</code>), a gap of <span id="bx-pgap"></span>, the columns (as tall as the tallest), the footer gap and footer row, then 4 units of the framework's spacing and the bottom padding.</p>
+    <h3>Width: free</h3>
+    <p>There is no maximum width: the framework sets the device body to exactly the layout's width, and the device chain scrolls sideways. The width is <code>width</code> if you give one, else the sum of the columns' widths, gaps and padding when every column has a width, else what the content needs.</p>
+    <h3>Columns, rows and cells</h3>
+    <ul>
+      <li><b>Columns</b> sit left to right, <span id="bx-lgap"></span> apart (<code>gap</code>); a divider goes in the middle of its gap. Items in a column are <span id="bx-cgap"></span> apart. A column with a <code>width</code> is exactly that wide and centres its items; without one it is as wide as its widest item.</li>
+      <li><b>Rows</b> put items side by side, <span id="bx-rgap"></span> apart. A row with a fixed width (its own, or its column's) shares it in equal cells.</li>
+      <li><b>Knobs</b> at a theme size are Bitwig's knob (<span id="bx-knob"></span>) with the label above and the value under it, <span id="bx-line"></span> apart; a label is its font's height (Default: <span id="bx-label"></span>). A knob with a number <code>size</code> is a fixed cell: its label line, the knob at exactly that size, and its value line, as wide as its cell. The <b>label line's height comes from its font, not from the knob's size</b>: a 65 knob and a 34 knob in Default have the same label line (<span id="bx-label2"></span>), unless the layout sets <code>label_height</code>. So a knob's ring starts that label line plus <span id="bx-line2"></span> below the cell's top, plus the ring's small inset in the knob's box. Select an item to see these edges as guides with their exact heights, and use <b>Align</b> in the inspector to line one item up with another.</li>
+      <li>A <code>background</code> adds <span id="bx-bg"></span> units of padding around its item.</li>
+    </ul>
+    <h3>min_resolved</h3>
+    <p>A reference to a parameter the plug-in doesn't have makes the whole layout fall back to Bitwig's own page. <code>"min_resolved": 80</code> lets 80% of references be enough: the items whose parameter is missing are left out (an envelope is drawn empty), and the layout falls back only when fewer match.</p>
+    <div class="dialog-tools"><button value="close" class="primary">Close</button></div>
+  </form>
+</dialog>
+
+<div id="drop-hint" class="drop-hint" hidden>Drop a parameter sheet, a layout or a BTE theme</div>
+<div id="toast" class="toast" hidden></div>
+
+<script src="core.js"></script>
+<script src="default-theme.js"></script>
+<script src="theme.js"></script>
+<script src="preview.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

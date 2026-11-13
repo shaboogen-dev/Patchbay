@@ -1,0 +1,61 @@
+{
+  "manifest_version": 2,
+  "mod": {
+    "id": "example-mod",
+    "name": "Example Mod",
+    "version": "1.0.0",
+    "author": "Example Author",
+    "description": "Synthetic Manifest v2 Preview 2 structure example."
+  },
+  "built_against": {
+    "bitwig_version": "6.1.3",
+    "platform": "windows",
+    "architecture": "x64"
+  },
+  "helper": {
+    "jar": "helper.jar",
+    "class": "example.mod.Helper"
+  },
+  "targets": {
+    "example_method": {
+      "kind": "method",
+      "owner": "example/Target",
+      "name": "run",
+      "descriptor": "()V"
+    }
+  },
+  "resources": {
+    "menu_icon": {
+      "kind": "file",
+      "path": "resources/icons/action.svg",
+      "media_type": "image/svg+xml"
+    },
+    "portable_config": {
+      "kind": "directory",
+      "path": "resources/config",
+      "persistence": "preserve"
+    }
+  },
+  "hooks": [
+    {
+      "id": "example-hook",
+      "target": "example_method",
+      "transform": "INSERT_AT_ENTRY",
+      "ordering": {
+        "after": [
+          {
+            "mod": "optional-other-mod",
+            "hook": "capture-context"
+          }
+        ]
+      },
+      "bridge": {
+        "method": "onRun",
+        "descriptor": "(Ljava/lang/Object;)V",
+        "args": [
+          "this"
+        ]
+      }
+    }
+  ]
+}

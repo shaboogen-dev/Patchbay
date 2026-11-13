@@ -1,0 +1,99 @@
+{
+  "match": { "name": "ValhallaVintageVerb" },
+  "title": false,
+  "toolbar": { "position": "right", "background": "#2E2E2E", "divider": true, "list": true,
+               "order": ["layout", "list", "container"], "align": "bottom" },
+  "min_resolved": 60,
+  "refresh": "settle",
+  "typing": "mapping",
+  "background": "#3A3A3A",
+  "padding": [6, 6, 2, 4],
+  "stripe": true,
+  "mode_colors": {
+    "param": "ReverbMode",
+    "map": {
+      "Concert Hall": { "stripe": "#E8A33D", "knob_arc": "#E8A33D", "header": "#E8A33D", "divider": "#E8A33D", "background_tint": "#E8A33D", "toolbar": "#4A3518" },
+      "Plate": { "stripe": "#4FA3E0", "knob_arc": "#4FA3E0", "header": "#4FA3E0", "divider": "#4FA3E0", "toolbar": "#000000" },
+      "Cathedral": { "stripe": "#E06060", "knob_arc": "#E06060", "toolbar": "#1A2A44" },
+      "Room": "#6CC070", "Chamber": "#B07CE0"
+    },
+    "mix": { "toolbar": 1.0 },
+    "apply": ["stripe", "knob_arc", "header", "divider", "background_tint", "toolbar"]
+  },
+  "gap": 15,
+  "header_height": 11,
+  "label_height": 15,
+  "value_height": 16,
+  "footer_gap": 3,
+  "header_font": "Bold 10",
+  "header_color": "#9C9C9C",
+  "label_font": "Default 10",
+  "label_color": "#9C9C9C",
+  "value_font": "Default 11",
+  "value_color": "#D6D6D6",
+  "columns": [
+    {
+      "width": 54, "gap": 10,
+      "items": [
+        { "knob": "Mix", "size": 34, "label": "MIX", "values": { "min": 0, "max": 100, "unit": "%" } },
+        { "knob": "PreDelay", "size": 34, "label": "PREDLY", "values": { "min": 0, "max": 500, "unit": "ms" } }
+      ]
+    },
+    {
+      "width": 114, "gap": 10, "divider": true,
+      "items": [
+        { "knob": "Decay", "size": 34, "label": "DECAY", "values": { "min": 0.2, "max": 70, "unit": "s", "curve": "log" } },
+        { "row": [
+          { "knob": "LowCut", "size": 34, "label": "LOW CUT", "values": { "min": 10, "max": 2000, "unit": "Hz", "curve": "log" } },
+          { "knob": "HighCut", "size": 34, "label": "HIGH CUT", "values": { "min": 200, "max": 20000, "unit": "Hz", "curve": "log" } }
+        ], "gap": 0 }
+      ]
+    },
+    {
+      "header": "FREQ", "width": 54, "gap": 10, "divider": true,
+      "items": [
+        { "knob": "HighFreq", "size": 34, "label": "HighF", "values": { "min": 200, "max": 20000, "unit": "Hz", "curve": "log" } },
+        { "knob": "BassXover", "size": 34, "label": "BassF", "values": { "min": 50, "max": 1000, "unit": "Hz", "curve": "log" } }
+      ]
+    },
+    {
+      "header": "SHELF", "width": 54, "gap": 10,
+      "items": [
+        { "knob": "HighShelf", "size": 34, "label": "Shelf", "values": { "min": -24, "max": 0, "unit": "dB" } },
+        { "knob": "BassMult", "size": 34, "label": "BassX", "values": { "min": 0.25, "max": 4, "unit": "X", "curve": "log" } }
+      ]
+    },
+    {
+      "header": "SIZE", "width": 54, "gap": 10,
+      "items": [
+        { "knob": "Size", "size": 34, "label": "Size", "values": { "min": 0, "max": 100, "unit": "%" } },
+        { "knob": "Attack", "size": 34, "label": "Attack", "values": { "min": 0, "max": 100, "unit": "%" } }
+      ]
+    },
+    {
+      "header": "DIFFUSION", "width": 54, "gap": 10,
+      "items": [
+        { "knob": "EarlyDiffusion", "size": 34, "label": "Early", "values": { "min": 0, "max": 100, "unit": "%" } },
+        { "knob": "LateDiffusion", "size": 34, "label": "Late", "values": { "min": 0, "max": 100, "unit": "%" } }
+      ]
+    },
+    {
+      "header": "MOD", "width": 54, "gap": 10,
+      "items": [
+        { "knob": "ModRate", "size": 34, "label": "Rate", "values": { "min": 0.01, "max": 10, "unit": "Hz", "curve": "log" } },
+        { "knob": "ModDepth", "size": 34, "label": "Depth", "values": { "min": 0, "max": 100, "unit": "%" } }
+      ]
+    }
+  ],
+  "footer": [
+    { "dropdown": "ReverbMode", "label": false, "style": "Borderless", "width": 104, "height": 20,
+      "choices": [["Concert Hall", 0.041667], ["Plate", 0.083333], ["Room", 0.125], ["Chamber", 0.166667],
+                  ["Random Space", 0.208333], ["Chorus Space", 0.25], ["Ambience", 0.291667], ["Bright Hall", 0.333333],
+                  ["Sanctuary", 0.375], ["Dirty Hall", 0.416667], ["Dirty Plate", 0.458333], ["Smooth Plate", 0.5],
+                  ["Smooth Room", 0.541667], ["Smooth Random", 0.583333], ["Nonlin", 0.625], ["Chaotic Chamber", 0.666667],
+                  ["Chaotic Hall", 0.708333], ["Chaotic Neutral", 0.75], ["Cathedral", 0.791667], ["Palace", 0.833333],
+                  ["Chamber1979", 0.875], ["Hall1984", 0.916667]] },
+    { "dropdown": "ColorMode", "label": false, "style": "Borderless", "width": 62, "height": 20,
+      "choices": [["seventies", 0.333333], ["eighties", 0.666667], ["now", 1.0]] }
+  ]
+}

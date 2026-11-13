@@ -1,0 +1,35 @@
+{
+  "manifest_version": 2,
+  "mod": {
+    "id": "browser-framework",
+    "name": "Framework: Browser",
+    "area": "Framework",
+    "version": "0.3.0-dev.1",
+    "author": "shaboogen",
+    "description": "Lets mods change Bitwig's browsers: hide their parts, add file kinds, and offer browser views of their own. Settings > Mods has the choice of view once a mod offers one.",
+    "documentation": "readme"
+  },
+  "built_against": {
+    "bitwig_version": "6.1.4",
+    "platform": "windows",
+    "architecture": "x64"
+  },
+  "requires": [
+    { "id": "preferences-composition-framework", "min_version": "1.0.0" }
+  ],
+  "resources": {
+    "readme": {
+      "kind": "file",
+      "path": "README.md",
+      "media_type": "text/markdown"
+    }
+  },
+  "registrations": [
+    {
+      "id": "preferences",
+      "consumer": "preferences-composition-framework",
+      "descriptor": "preferences.properties",
+      "jar": "helper.jar"
+    }
+  ]
+}

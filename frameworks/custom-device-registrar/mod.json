@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "mod": {
+    "id": "custom-device-registrar",
+    "name": "Framework: Nitro Devices",
+    "area": "Framework",
+    "version": "1.3.0-dev.3",
+    "author": "shaboogen",
+    "description": "Loads your own Nitro devices, modulators and Grid modules into Bitwig, from the folders you choose in Device Folders.",
+    "documentation": "readme"
+  },
+  "built_against": {
+    "bitwig_version": "6.1.4",
+    "platform": "windows",
+    "architecture": "x64"
+  },
+  "bml_tools": {
+    "device-folders": { "resource": "config", "key": "folders" }
+  },
+  "resources": {
+    "config": { "kind": "file", "path": "config.json", "persistence": "created" },
+    "readme": {
+      "kind": "file",
+      "path": "README.md",
+      "media_type": "text/markdown"
+    }
+  }
+}

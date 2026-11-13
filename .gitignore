@@ -1,0 +1,41 @@
+# Standard 12: nothing proprietary or generated in git.
+
+# build outputs and Bitwig-derived files (rebuilt from source, never committed)
+*.jar
+*.zip
+*.dll
+*.exe
+*.lib
+*.exp
+*.obj
+*.so
+*.dylib
+*.o
+*.pdb
+*.class
+*.tsv.gz
+*.sqlite
+*.sqlite-*
+/dist/
+
+# mod kit outputs and compile jars (derived from Bitwig's jar)
+/modkit/out/
+/modkit/cache/
+
+# framework dev folders: trial copies and javap dumps of Bitwig code
+/frameworks/*/dev/
+
+# the JDK's JNI headers, put beside build-agent-mac.sh for a build on a Mac (not ours to commit)
+/loader/src/loader/jvmti/jdk-include/
+
+__pycache__/
+*.pyc
+
+# bundled runtimes copied into old working folders
+jre/
+*.jmod
+*.jsa
+
+# Bundled fonts (SIL OFL): third-party, kept out of git; sources and SHA-256 in loader/src/loader/app/resources/dev/bitwigre/bml/fonts/FONTS.md
+loader/src/loader/app/resources/dev/bitwigre/bml/fonts/*.ttf
+loader/src/loader/app/resources/dev/bitwigre/bml/fonts/OFL-*.txt
