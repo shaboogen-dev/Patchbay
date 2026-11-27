@@ -342,6 +342,21 @@ python BML\tools\map_validator\validate.py <pack.zip> --out C:\work\validation
 
 It needs the jars of every build the pack names (`bitwig/jars/<version>/`, `<version>-mac/`, `<version>-linux/`). It exits with 0 when no hard check fails, and writes a report per remap to the `--out` folder. `BML\tools\map_validator\compare.py <a.zip> <b.zip>` compares two packs row by row.
 
+### Windows 6.1.9 compatibility probe
+
+The [reviewed Windows 6.1.5 → 6.1.9 rows](../tools/map_validator/fixtures/windows-6.1.5__windows-6.1.9.tsv) cover the document event loop and undo processor, Arranger and clip painting, note timelines, and device parameter and automation lane types. Each member row includes its owner and full JVM descriptor. In particular, the clip painter has several methods named `IYM` on 6.1.5 and `JZe` on 6.1.9.
+
+To reproduce these bindings, use a local copy of each Windows x64 `bitwig.jar`, a built Patchbay loader and a JDK with `java`, `javac` and `jar` on PATH. From the repository root, run the following with your local paths.
+
+```sh
+python tools/map_validator/windows_619_probe.py "<6.1.5>/bin/bitwig.jar" "<6.1.9>/bin/bitwig.jar" probe.zip
+python tools/map_validator/smoke_windows_619.py probe.zip "<Patchbay>/loader" "<6.1.9>/bin"
+```
+
+The first command checks both JAR hashes and all listed declarations, reads the source hierarchy and writes a new scratch pack. The second imports the pack into a temporary portable install, prepares a 6.1.5 mod against 6.1.9, checks every resolved target and verifies a hook in the transformed clip painter. Bitwig can stay closed throughout.
+
+This pack is a development fixture for the listed Windows bindings. A release map also needs coverage for the builds used by the shipped mods and validation against their helpers. A mod whose target changes its calling convention needs an adapter. For example, the 6.1.9 Arranger clip removal tested downstream takes the original event and its current index. The caller must supply that index.
+
 ## 7. Platforms
 
 Packs are per build, and a build is per platform: Bitwig's macOS and Linux `bitwig.jar` differ from the Windows one (about 6% of members have different names, and some classes exist on one platform only), so each needs its own pack, with its own `target_jar_sha256`.

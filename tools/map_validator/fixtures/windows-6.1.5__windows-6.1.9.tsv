@@ -1,0 +1,60 @@
+# Project, document event loop and undo processor
+C	com/bitwig/flt/document/core/master/oZU	com/bitwig/flt/document/core/master/ZzV
+C	com/bitwig/ramona/core/cq	com/bitwig/ramona/core/ccj
+C	com/bitwig/ramona/core/quT	com/bitwig/ramona/core/VBa
+C	com/bitwig/ramona/core/MQf	com/bitwig/ramona/core/gNl
+C	com/bitwig/ramona/core/kX1	com/bitwig/ramona/core/r3r
+C	com/bitwig/ramona/core/oPC	com/bitwig/ramona/core/XSc
+C	com/bitwig/flt/document/api/document/ApiProject	com/bitwig/flt/document/api/document/ApiProject
+# Arranger timeline painter, clip painter and their argument types
+C	boR	bpG
+C	bpT	bqG
+C	XEQ	jBb
+C	com/bitwig/graphics/CPO	com/bitwig/graphics/g3r
+C	QFL	bkt
+C	duK	dvv
+C	com/bitwig/flt/widget/core/timeline/sak	com/bitwig/flt/widget/core/timeline/BRD
+C	bhU	biF
+C	com/bitwig/base/geom/WHF	com/bitwig/base/geom/yUO
+C	com/bitwig/flt/document/core/iface/fui	com/bitwig/flt/document/core/iface/oT
+C	dpz	dqi
+# Note events and the per-channel, per-key note timeline
+C	com/bitwig/flt/document/api/document/ApiNoteTimeline	com/bitwig/flt/document/api/document/ApiNoteTimeline
+C	com/bitwig/flt/document/api/document/ApiNoteEvent	com/bitwig/flt/document/api/document/ApiNoteEvent
+C	Tc	Xz
+C	o3j	UX3
+C	vDh	gHn
+# Device parameters and Arranger automation lane ownership
+C	com/bitwig/flt/document/api/document/ApiPluginDeviceParameterAtom	com/bitwig/flt/document/api/document/ApiPluginDeviceParameterAtom
+C	com/bitwig/flt/document/api/document/ApiDevice	com/bitwig/flt/document/api/document/ApiDevice
+C	com/bitwig/flt/document/core/master/device/GAN	com/bitwig/flt/document/core/master/device/sco
+C	com/bitwig/flt/document/core/master/device/Wcl	com/bitwig/flt/document/core/master/device/cCn
+C	com/bitwig/flt/document/core/master/Kkl	com/bitwig/flt/document/core/master/Fkl
+C	Wlr	JyA
+C	m1C	glC
+C	W2C	cIc
+C	No	NHn
+# Match overloads by owner, name and full descriptor.
+M	com/bitwig/flt/document/api/document/ApiProject	<init>	(Lcom/bitwig/flt/document/core/master/oZU;)V	com/bitwig/flt/document/api/document/ApiProject	<init>	(Lcom/bitwig/flt/document/core/master/ZzV;)V
+M	com/bitwig/flt/document/core/master/oZU	<init>	()V	com/bitwig/flt/document/core/master/ZzV	<init>	()V
+M	com/bitwig/ramona/core/cq	uju	()Lcom/bitwig/ramona/core/quT;	com/bitwig/ramona/core/ccj	cZ3	()Lcom/bitwig/ramona/core/VBa;
+M	com/bitwig/ramona/core/quT	HT3	()Lcom/bitwig/ramona/core/MQf;	com/bitwig/ramona/core/VBa	mBB	()Lcom/bitwig/ramona/core/gNl;
+M	com/bitwig/ramona/core/cq	wtf	(Ljava/lang/String;Ljava/lang/String;Z)Z	com/bitwig/ramona/core/ccj	oYY	(Ljava/lang/String;Ljava/lang/String;Z)Z
+M	com/bitwig/ramona/core/cq	LTl	()Z	com/bitwig/ramona/core/ccj	IQE	()Z
+M	com/bitwig/ramona/core/kX1	GQ	()I	com/bitwig/ramona/core/r3r	AtV	()I
+M	com/bitwig/ramona/core/oPC	nk_	()Lcom/bitwig/ramona/core/oPC;	com/bitwig/ramona/core/XSc	nj_	()Lcom/bitwig/ramona/core/XSc;
+M	com/bitwig/ramona/core/kX1	nk_	()Lcom/bitwig/ramona/core/oPC;	com/bitwig/ramona/core/r3r	nj_	()Lcom/bitwig/ramona/core/XSc;
+M	bpT	IYM	(Lcom/bitwig/graphics/CPO;LXEQ;DDDZZDDDDDD)V	bqG	JZe	(Lcom/bitwig/graphics/g3r;LjBb;DDDZZDDDDDD)V
+M	com/bitwig/graphics/CPO	IYM	(DDDDLQFL;)V	com/bitwig/graphics/g3r	JZe	(DDDDLbkt;)V
+M	QFL	<init>	(DDDD)V	bkt	<init>	(DDDD)V
+M	dpz	GgG	()Ldpz;	dqi	poW	()Ldqi;
+M	boR	<init>	(Lcom/bitwig/graphics/CPO;LduK;Lcom/bitwig/flt/widget/core/timeline/sak;LbhU;Lcom/bitwig/base/geom/WHF;)V	bpG	<init>	(Lcom/bitwig/graphics/g3r;Ldvv;Lcom/bitwig/flt/widget/core/timeline/BRD;LbiF;Lcom/bitwig/base/geom/yUO;)V
+M	bpT	<init>	(Lcom/bitwig/graphics/CPO;LduK;Lcom/bitwig/flt/widget/core/timeline/sak;LbhU;Lcom/bitwig/base/geom/WHF;Lcom/bitwig/flt/document/core/iface/fui;JJ)V	bqG	<init>	(Lcom/bitwig/graphics/g3r;Ldvv;Lcom/bitwig/flt/widget/core/timeline/BRD;LbiF;Lcom/bitwig/base/geom/yUO;Lcom/bitwig/flt/document/core/iface/oT;JJ)V
+M	com/bitwig/flt/document/api/document/ApiNoteTimeline	<init>	(Lo3j;)V	com/bitwig/flt/document/api/document/ApiNoteTimeline	<init>	(LUX3;)V
+M	com/bitwig/flt/document/api/document/ApiNoteEvent	<init>	(LTc;)V	com/bitwig/flt/document/api/document/ApiNoteEvent	<init>	(LXz;)V
+M	o3j	Qcu	(IIZ)LvDh;	UX3	arE	(IIZ)LgHn;
+M	com/bitwig/flt/document/api/document/ApiDevice	<init>	(Lcom/bitwig/flt/document/core/master/device/Wcl;)V	com/bitwig/flt/document/api/document/ApiDevice	<init>	(Lcom/bitwig/flt/document/core/master/device/cCn;)V
+M	com/bitwig/flt/document/api/document/ApiPluginDeviceParameterAtom	<init>	(Lcom/bitwig/flt/document/core/master/device/GAN;)V	com/bitwig/flt/document/api/document/ApiPluginDeviceParameterAtom	<init>	(Lcom/bitwig/flt/document/core/master/device/sco;)V
+M	m1C	Noo	()LW2C;	glC	PJJ	()LcIc;
+M	com/bitwig/flt/document/core/master/Kkl	jPB	(LWlr;)LW2C;	com/bitwig/flt/document/core/master/Fkl	CPB	(LJyA;)LcIc;
+F	com/bitwig/ramona/core/MQf	nsm	Ljava/util/Stack;	com/bitwig/ramona/core/gNl	YAC	Ljava/util/Stack;
